@@ -10,9 +10,9 @@ CloudClient::~CloudClient()
 
 void CloudClient::begin(BearSSL::WiFiClientSecure *c,
                         Parser::ParserCallback cb,
-                        std::string id, std::string firmwareLink)
+                        std::string id, std::string firmware)
 {
-  firmware = firmwareLink;
+  firmwareLink = firmware;
   hardwareId = id;
   client = c;
   parser = Parser(cb, true);

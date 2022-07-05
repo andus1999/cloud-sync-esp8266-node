@@ -36,7 +36,8 @@ void CloudSync::begin(ESP8266WiFiMulti &m,
   otaUpdate.begin(&c);
   cloudClient->begin(&c,
                      std::bind(&CloudSync::handleEvent, this, std::placeholders::_1, std::placeholders::_2),
-                     hardwareId);
+                     hardwareId,
+                     firmwareLink);
   initialized = true;
   watchLazy("heartbeat", [this]
             { return this->timeStamp; });
