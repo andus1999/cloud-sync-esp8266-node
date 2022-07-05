@@ -15,7 +15,6 @@ void OtaUpdate::initiateFirmwareUpdate(std::string firmwareLink)
 
   client->setBufferSizes(16384, 512);
   Serial.println("Updating firmware...");
-  ESPhttpUpdate.setLedPin(LED_BUILTIN, LOW);
 
   t_httpUpdate_return ret = ESPhttpUpdate.update(*client, firmwareLink.c_str());
 
