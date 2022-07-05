@@ -16,7 +16,7 @@
 #define INFO_URI std::string(NETWORK_PATH + "/info.json")
 #define LOCAL_URI std::string(NETWORK_PATH + "/local_state.json")
 #define CLOUD_URI std::string(NETWORK_PATH + "/cloud_state.json")
-#define INITIALIZATION_DATA "{\"hardware_id\":\"" + hardwareId + "\"}"
+#define INITIALIZATION_DATA "{\"hardware_id\":\"" + hardwareId + "\", \"firmware\":\"" + firmware + "\"}"
 #define UPLOAD_BUFFER 512
 
 class CloudClient
@@ -26,7 +26,8 @@ public:
   ~CloudClient();
   void begin(BearSSL::WiFiClientSecure *client,
              Parser::ParserCallback,
-             std::string hardwareId);
+             std::string hardwareId,
+             std::string firmwareLink);
   bool initialize();
   bool update(void);
   bool uploadLocalState(std::string);
@@ -45,6 +46,7 @@ private:
   bool initialized = false;
   bool listeningForEvents = false;
   std::string hardwareId;
+  std::string firmware;
   std::string networkUid;
 
   bool patch(std::string uri, std::string body);
