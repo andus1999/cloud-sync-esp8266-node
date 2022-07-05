@@ -12,7 +12,6 @@ private:
   bool running = false;
   void handleInitialize();
   void handleIndex();
-  void handleFont();
   void handleSetCredentials();
   void handleSetNetworkInformation();
   void handleConnectionTest();

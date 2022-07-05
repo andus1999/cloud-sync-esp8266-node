@@ -29,8 +29,6 @@ void WebServer::begin()
             { this->handleInitialize(); });
   server.on("/", [this]
             { this->handleIndex(); });
-  server.on("/font.tff", [this]
-            { this->handleFont(); });
   server.begin(80);
   initialized = true;
   if (!pendingSetup)
@@ -64,12 +62,6 @@ void WebServer::handleIndex()
   pendingSetup = true;
   handleResponse();
   server.send(200, "text/html", fileSystem->getHtml().c_str());
-}
-
-void WebServer::handleFont()
-{
-  handleResponse();
-  server.send(200, "text/html", fileSystem->getFont().c_str());
 }
 
 void WebServer::handleInitialize()
