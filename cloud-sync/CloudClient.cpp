@@ -61,6 +61,7 @@ void CloudClient::stop()
 {
   listeningForEvents = false;
   initialized = false;
+  FileSystem::getInstance().setInit("false");
   uploadHttps.end();
   https.end();
   uploadClient.stop();
@@ -69,7 +70,7 @@ void CloudClient::stop()
 
 bool CloudClient::initialize()
 {
-  initialized = FileSystem::getInstance().getInit() == "true" ? true : false;
+  initialized = false; // FileSystem::getInstance().getInit() == "true" ? true : false;
   networkUid = FileSystem::getInstance().getNetworkUid();
 
   if (initialized)
