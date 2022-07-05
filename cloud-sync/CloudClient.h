@@ -16,7 +16,7 @@
 #define INFO_URI std::string(NETWORK_PATH + "/info.json")
 #define LOCAL_URI std::string(NETWORK_PATH + "/local_state.json")
 #define CLOUD_URI std::string(NETWORK_PATH + "/cloud_state.json")
-#define INITIALIZATION_DATA "{\"hardware_id\":\"" + hardwareId + "\", \"firmware\":\"" + *firmwareLink + "\"}"
+#define INITIALIZATION_DATA "{\"hardware_id\":\"" + hardwareId + "\"}"
 #define UPLOAD_BUFFER 512
 
 class CloudClient
