@@ -32,7 +32,6 @@ public:
   std::string getServerKey();
   std::string getInit();
   std::string getHtml();
-  std::string getFont();
 
   void setSsid(std::string ssid);
   void setPass(std::string pass);
