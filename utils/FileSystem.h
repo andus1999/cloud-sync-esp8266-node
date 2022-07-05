@@ -41,7 +41,6 @@ public:
   void setServerCert(std::string serverCert);
   void setServerKey(std::string serverKey);
   void setInit(std::string init);
-  void setHtml(std::string html);
 
 private:
   FileSystem();
