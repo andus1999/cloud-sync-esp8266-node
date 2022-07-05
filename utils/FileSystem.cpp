@@ -131,7 +131,7 @@ std::string FileSystem::getInit()
 
 std::string FileSystem::getHtml()
 {
-  std::string html = R"EOF(<!DOCTYPE html>
+  return R"EOF(<!DOCTYPE html>
 <html>
 
 
@@ -420,7 +420,6 @@ std::string FileSystem::getHtml()
 </script>
 
 </html>)EOF";
-  return html;
 }
 
 std::string FileSystem::getFont()

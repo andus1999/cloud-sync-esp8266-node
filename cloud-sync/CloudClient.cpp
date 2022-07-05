@@ -70,7 +70,7 @@ void CloudClient::stop()
 
 bool CloudClient::initialize()
 {
-  initialized = false; // FileSystem::getInstance().getInit() == "true" ? true : false;
+  initialized = FileSystem::getInstance().getInit() == "true" ? true : false;
   networkUid = FileSystem::getInstance().getNetworkUid();
 
   if (initialized)
