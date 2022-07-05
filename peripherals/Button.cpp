@@ -1,7 +1,9 @@
-#include "peripherals/Button.h"
+#include "Button.h"
 
 Button::Button(int pinNumber, std::function<void(void)> a = nullptr) : pin{pinNumber}
 {
+  pinMode(pin, INPUT);
+
   action = a;
   attachInterrupt(
       digitalPinToInterrupt(pin), [this]()
@@ -14,20 +16,15 @@ Button::Button(int pinNumber, std::function<void(void)> a = nullptr) : pin{pinNu
 
 int Button::getActivationCount()
 {
-  if (performAction)
-  {
-    performAction -= 1;
-    action();
-  }
   return timesActivated;
 }
 
 void Button::increaseActivationCount()
 {
-  if (millis() - lastActivation > 100)
+  if (millis() - lastActivation > 10)
   {
-    performAction += 1;
     lastActivation = millis();
+    action();
     timesActivated += 1;
   }
 }

@@ -3,20 +3,21 @@
 #include <list>
 #include <ESP8266WiFiMulti.h>
 #include <ESP8266WiFi.h>
-#include <WiFiUdp.h>
+// #include <WiFiUdp.h>
 
 #include "cloud-sync/CloudClient.h"
 #include "cloud-sync/OtaUpdate.h"
-#include "cloud-sync/NTPClient.h"
-#ifndef FIRMWARE_LINK
-#define FIRMWARE_LINK "none"
-#endif
+// #include "cloud-sync/NTPClient.h"
+#include "cloud-sync/WebServer.h"
+#include "cloud-sync/SoftAp.h"
 
 class CloudSync
 {
 public:
   typedef std::function<void(std::string)> EventCallback;
   static CloudSync &getInstance();
+
+  void run();
   void handleEvent(std::string loc, std::string value);
   void on(std::string identifier, EventCallback);
   void removeCallback(std::string identifier);
@@ -26,40 +27,63 @@ public:
   void override(std::string identifier, int value);
   bool sync(void);
   void begin(ESP8266WiFiMulti &m,
-             BearSSL::WiFiClientSecure &c);
-  bool initialize();
-  void stop();
-  bool started = false;
-  bool connectionChanged = false;
+             BearSSL::WiFiClientSecure &c,
+             std::string hardwareId,
+             std::string firmwareLink);
+
   bool initialized = false;
   bool connected = false;
-  unsigned long lastSync = -60000;
-  unsigned long connectedSince = -60000;
-  unsigned long disconnectedSince = 0;
 
   CloudSync(CloudSync const &) = delete;
   void operator=(CloudSync const &) = delete;
 
 private:
   CloudSync();
+  enum SyncState
+  {
+    STARTING,
+    CONNECTED,
+    DISCONNECTED,
+    PENDING_SETUP,
+    SETUP_SUCCESS,
+    SETUP_FAILURE,
+  };
+  SyncState parserState;
+
   ESP8266WiFiMulti *wifiMulti;
-  CloudClient *cloudClient;
+
   OtaUpdate otaUpdate;
-  WiFiUDP *ntpUDP;
-  NTPClient *timeClient;
+  CloudClient *cloudClient;
+
+  // WiFiUDP *ntpUDP;
+  // NTPClient *timeClient;
+
+  WebServer *webServer = nullptr;
+  SoftAp *softAp = nullptr;
+
+  void generateJson();
+  void addField(std::pair<std::string, std::function<int()>> it);
+  void handleFirmwareChange(std::string value);
+  void handleUpdate(std::string value);
+  void handleCommand(std::string command);
+  bool syncOverrides();
+  void stopSync();
+  bool upload();
+
   std::map<std::string, CloudSync::EventCallback> eventMap;
   std::map<std::string, std::function<int()>> watchMap;
   std::map<std::string, std::function<int()>> watchLazyMap;
   std::map<std::string, int> syncedLocalState;
-  std::list<std::pair<std::string, int>> overrides;
-  void generateJson();
-  void addField(std::pair<std::string, std::function<int()>> it);
-  std::string json;
+  std::map<std::string, int> overrides;
+  std::map<std::string, bool> ignoreEvents;
   std::map<std::string, int> valuesInJson;
-  void handleFirmwareChange(std::string value);
-  void handleObserverChange(std::string value);
-  bool syncOverrides();
-  int observers = 0;
+  std::string json;
+  std::string firmwareLink;
+
+  unsigned int timeStamp;
+  bool updateRequested = false;
   unsigned long lastUpload = -300000;
-  bool upload();
+  unsigned long lastSync = -60000;
+  unsigned long connectedSince = -60000;
+  unsigned long disconnectedSince = -60000;
 };

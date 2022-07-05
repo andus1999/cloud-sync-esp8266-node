@@ -1,8 +1,8 @@
 #pragma once
 
 #include <Arduino.h>
-#include "drivers/Max7219.h"
-#include "CloudSync.h"
+#include <drivers/Max7219.h>
+#include "../CloudSync.h"
 
 class LedMatrix
 {

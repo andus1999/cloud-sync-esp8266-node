@@ -2,7 +2,7 @@
 
 #include <Arduino.h>
 #include <string>
-#include "CloudSync.h"
+#include "../CloudSync.h"
 
 class Led
 {

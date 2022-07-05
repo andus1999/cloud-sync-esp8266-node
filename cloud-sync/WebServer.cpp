@@ -1,4 +1,4 @@
-#include "cloud-sync/WebServer.h"
+#include "WebServer.h"
 
 WebServer::WebServer(ESP8266WiFiMulti &w)
 {
@@ -42,7 +42,7 @@ void WebServer::begin()
 void WebServer::handleClient()
 {
   if (!initialized)
-    return;
+    begin();
   if (server.getServer().status() == CLOSED)
   {
     Serial.println("restarting the server");
@@ -76,6 +76,7 @@ void WebServer::handleInitialize()
 {
   if (server.method() == HTTP_PUT)
   {
+    fileSystem->setInit("false");
     std::string data = server.arg("plain").c_str();
 
     // networkUid
@@ -113,12 +114,12 @@ void WebServer::handleInitialize()
 void WebServer::handleSuccess()
 {
   handleResponse();
-  bool c = CloudSync::getInstance().connected;
+  bool c = connected;
   server.send(200, "text/plain", c ? "true" : "false");
+  pendingSetup = false;
   if (c)
   {
-    pendingSetup = false;
-    CloudSync::getInstance().connectionChanged = true;
+    connectionChanged = true;
   }
 }
 
@@ -194,6 +195,7 @@ void WebServer::connectToAp()
   {
     Serial.println("Starting sync...");
     server.close();
-    CloudSync::getInstance().connectionChanged = true;
+    // cuases OOM
+    connectionChanged = true;
   }
 }
